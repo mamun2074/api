@@ -1,9 +1,10 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\v1\AuthController;
 use App\Http\Controllers\API\v1\UserController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -23,16 +24,23 @@ use App\Http\Controllers\API\v1\UserController;
 
 
 Route::group(['prefix' => 'v1'], function () {
-    Route::post('/register', [UserController::class, 'register'])
+    Route::post('/register', [AuthController::class, 'register'])
         ->name('register');
 
-    Route::post('/login', [UserController::class, 'login'])
+    Route::post('/login', [AuthController::class, 'login'])
         ->name('login');
-
 });
 
-Route::group(['prefix' => 'v1', 'middleware'=> ['auth:api']], function () {
-    Route::post('/logout', [UserController::class, 'logout'])
+Route::group(['prefix' => 'v1', 'middleware' => ['auth:api']], function () {
+    Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
 
+    Route::group(['middleware' => ['app.permission']], function () {
+
+        Route::get('/users', [UserController::class, 'index'])
+            ->name('users.index');
+            
+        Route::get('/users/{id}', [UserController::class, 'show'])
+            ->name('users.show');
+    });
 });

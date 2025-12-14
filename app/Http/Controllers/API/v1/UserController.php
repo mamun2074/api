@@ -16,81 +16,30 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function register(Request $request)
+    public function index(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required',
-            'c_password' => 'required|same:password'
-        ]);
-
-        if ($validator->fails()) {
-            return AppResponse::sendValidationError($validator->errors());
+        $query = User::query();
+        if ($request->search) {
+            $query->where('name', 'like', "%$request->search%")->orWhere('email', 'like', "%$request->search%");
         }
-
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
-        ];
-
-        User::create($data);
-        return AppResponse::sendSuccess($data);
+        // default order
+        $query->orderBy('id', 'DESC');
+        if ($request->sortBy) {
+            $query->orderBy($request->sortBy, $request->sort);
+        }
+        $pageLength = ($request->pageLength) ? $request->pageLength  : 60;
+        return $query->paginate($pageLength);
     }
 
     /**
      * Display the specified resource.
      */
-    public function login(Request $request)
+    public function show($id)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return AppResponse::sendValidationError($validator->errors());
-        }
-
-        $user = User::where('email', $request->email)->first();
-        if ($user == null) {
-            return AppResponse::sendInvalid();
-        }
-
-        if (!Hash::check($request->password, $user->password)) {
-            return AppResponse::sendInvalid();
-        }
-
-
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-        // if remember me exist
-        if ($request->remember_me) {
-            $token->expires_at = Carbon::now()->addWeeks(1);
-        }
-
-        //  token save
-        $token->save();
-
-        // payload data
+        $user = User::find($id);
         $payload = [
-            'access_token' => $tokenResult->accessToken,
-            'data' => $user->only('id', 'name', 'email'),
-            'token_validity' => $token->expires_at
+            'data' => $user,
         ];
-        return AppResponse::sendSuccess($payload, 'Successfully logged in');
-    }
-
-    public function logout(Request $request)
-    {
-
-        //return AppResponse::sendInvalid();
-        if ($request->user()->token()->revoke()) {
-            $payload = [
-                'message' => 'Successfully logout'
-            ];
-            return AppResponse::sendSuccess($payload, 'Successfully logout');
-        }
+        return AppResponse::sendSuccess($payload);
     }
 }

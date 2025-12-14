@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8cfe801b14c8ef33f0fe46c4ce724472",
+    "content-hash": "11b0a491b023eba8af1e9c5c9c9581f3",
     "packages": [
         {
             "name": "brick/math",
@@ -1181,6 +1181,50 @@
                 }
             ],
             "time": "2025-08-22T14:27:06+00:00"
+        },
+        {
+            "name": "kawsarjoy/rolepermission",
+            "version": "v1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kawsarjoy/rolepermission.git",
+                "reference": "b2302568df952fda7e410be2d6054c0c266d5d65"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kawsarjoy/rolepermission/zipball/b2302568df952fda7e410be2d6054c0c266d5d65",
+                "reference": "b2302568df952fda7e410be2d6054c0c266d5d65",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "KawsarJoy\\RolePermission\\RolePermissionServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "KawsarJoy\\RolePermission\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mohammad Abu Kawsar",
+                    "email": "engabukawsar@gmail.com"
+                }
+            ],
+            "description": "A role permission package for laravel",
+            "support": {
+                "issues": "https://github.com/kawsarjoy/rolepermission/issues",
+                "source": "https://github.com/kawsarjoy/rolepermission/tree/v1.0.7"
+            },
+            "time": "2025-12-11T05:39:14+00:00"
         },
         {
             "name": "laravel/framework",
