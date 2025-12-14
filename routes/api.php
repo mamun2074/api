@@ -22,7 +22,17 @@ use App\Http\Controllers\API\v1\UserController;
 
 
 
-Route::group(['namespace' => 'App\Http\Controllers\API\V1', 'prefix' => 'v1'], function () {
+Route::group(['prefix' => 'v1'], function () {
     Route::post('/register', [UserController::class, 'register'])
         ->name('register');
+
+    Route::post('/login', [UserController::class, 'login'])
+        ->name('login');
+
+});
+
+Route::group(['prefix' => 'v1', 'middleware'=> ['auth:api']], function () {
+    Route::post('/logout', [UserController::class, 'logout'])
+        ->name('logout');
+
 });
