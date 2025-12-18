@@ -18,16 +18,24 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+
+        $sorItems = ['id', 'name', 'email'];
+        $sortDirs = ['asc', 'desc'];
+
         $query = User::query();
         if ($request->search) {
-            $query->where('name', 'like', "%$request->search%")->orWhere('email', 'like', "%$request->search%");
+            $query->where('name', 'like', "%$request->search%")
+                ->orWhere('email', 'like', "%$request->search%")
+                ->orWhere('id', 'like', "%$request->search%");
         }
         // default order
-        $query->orderBy('id', 'DESC');
-        if ($request->sortBy) {
-            $query->orderBy($request->sortBy, $request->sort);
+        if (in_array($request->sort_by, $sorItems) &&  in_array($request->sort_order, $sortDirs)) {
+            $query->orderBy($request->sort_by, $request->sort_order);
+        } else {
+            $query->orderBy('id', 'DESC');
         }
-        $pageLength = ($request->pageLength) ? $request->pageLength  : 60;
+        $pageLength = ($request->per_page) ? $request->per_page  : 60;
+
         return $query->paginate($pageLength);
     }
 
