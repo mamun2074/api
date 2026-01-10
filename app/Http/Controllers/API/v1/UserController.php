@@ -36,7 +36,7 @@ class UserController extends Controller
         }
         $pageLength = ($request->per_page) ? $request->per_page  : 60;
 
-        return $query->paginate($pageLength);
+        return AppResponse::sendSuccess($query->paginate($pageLength));
     }
 
     /**
